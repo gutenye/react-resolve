@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+<div id="app"></div>
+<script src="/node_modules/react/dist/react.js"></script>
+<script src="/node_modules/react-dom/dist/react-dom.js"></script>
+<script src="/node_modules/babel-standalone/babel.js"></script>
+<script src="/react-resolve.js"></script>
+<script type="text/babel">
+var pd = console.log.bind(console)
+Object.assign(window, React)
+Object.assign(window, ReactDOM)
+Object.assign(window, ReactResolve)
+
+class App extends Component {
+  render() {
+    var {props: {users, resolve, remove, add, update}} = this
+    return (
+      <div>
+        <button onClick={() => resolve({name: "resolve"})}>resolve</button>
+        <button onClick={() => remove(1)}>remove</button>
+        <button onClick={() => add({id: 3, name: "3"})}>add</button>
+        <button onClick={() => update({id: 1, name: "11"})}>update</button>
+
+        {users.map(({id, name}, i) =>
+        <div key={i}>{name}</div>
+        )}
+      </div>
+    )
+  }
+}
+
+App = resolve("users", (props) => Promise.resolve([{id: 1, name: props.name || "1"}, {id: 2, name: "2"}]), {
+  remove: (id) => Promise.resolve({id}),
+  add: (data) => Promise.resolve(data),
+  update: (data) => Promise.resolve(data),
+})(App)
+
+render(<App /> , document.querySelector("#app"))
+</script>
+  </body>
+</html>

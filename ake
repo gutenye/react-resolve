@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+main() {
+  webpack-dev-server
+  echo "Open localhost:3003/test"
+}
+
+build() {
+  webpack
+}
+
+case "$1" in
+  "" ) main ;;
+  b | build ) build ;;
+esac
