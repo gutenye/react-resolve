@@ -1,9 +1,13 @@
 {
   "name": "react-resolve",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
+  "version": "1.0.2",
+  "description": "react-resolve",
+  "license": "MIT",
+  "repository": "https://github.com/gutenye/react-resolve",
+  "readme": "README.md",
+  "main": "dist/index.js",
   "scripts": {
+    "prepublish": "./ake build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
