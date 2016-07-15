@@ -30,6 +30,10 @@ export default function resolve(key, promise, actions) {
         this.resolve()
       }
 
+      componentDidUpdate() {
+        this.resolve()
+      }
+
       resolve(arg) {
         var {props} = this
         arg = Object.assign({}, props, arg)
