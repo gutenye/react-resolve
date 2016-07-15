@@ -1,6 +1,12 @@
 react-resolve
 ======================
 
+Inspired by [relate](https://github.com/relax/relate) and [react-resolver](https://github.com/ericclemmons/react-resolver)
+
+Features
+- Support variables
+- Automatically manage the data list when do update action, e.g. add
+
 ## Usage
 
 ```
