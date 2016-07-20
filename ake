@@ -6,7 +6,7 @@ main() {
 }
 
 build() {
-  webpack
+  NODE_ENV=production webpack
 }
 
 case "$1" in

@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV !== "production"
+
 module.exports = {
   entry: "./src/index",
 
@@ -19,5 +21,5 @@ module.exports = {
     host: "0.0.0.0",
   },
 
-  devtool: "cheap-module-eval-source-map",
+  devtool: isDev ? "cheap-module-eval-source-map" : false,
 }

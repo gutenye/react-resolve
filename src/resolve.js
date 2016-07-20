@@ -1,3 +1,4 @@
+import React, {Component} from "react"
 import {forEach, remove} from "lodash"
 
 const ACTION_ALIAS = {
