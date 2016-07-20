@@ -31,8 +31,10 @@ export default function resolve(key, promise, actions) {
         this.resolve()
       }
 
-      componentDidUpdate() {
-        this.resolve()
+      componentDidUpdate(prev) {
+        if (prev.params.id !== this.props.params.id) {
+          this.resolve()
+        }
       }
 
       resolve(arg) {
