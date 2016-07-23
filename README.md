@@ -1,5 +1,5 @@
 react-resolve
-======================
+=============
 
 Inspired by [relate](https://github.com/relax/relate) and [react-resolver](https://github.com/ericclemmons/react-resolver)
 
@@ -12,8 +12,12 @@ Features
 ```
 import {resolve} from "react-resolve"
 
-@resolve("users", props => Promise.resolve([{id: 1, name: "a"}]), {
-  add: (data) => Promise.resolve(data)
+@resolve({
+  users: props => Promise.resolve([{id: 1, name: "a"}]),
+}, {
+  add: (data) => Promise.resolve(data),
+  add: [ (data) => promise, "ADD" ],
+  add: [ (data) => promise, "ADD" "users" ],
 })
 class App extends Component {
   render() {
@@ -24,6 +28,19 @@ class App extends Component {
 }
 
 this.resolve({page: 2})
+```
+
+Advanced Example
+
+```
+@resolve({
+  users: (props) => promise,
+  posts: () => promise,
+}, {
+  deleteUser: [ (data) => promise, "REMOVE", "users" ]  // ADD REMOVE UPDATE
+  deletPost: [ (data) => promise, "REMOVE", "posts" ]
+})
+class App extends Component { }
 ```
 
 ```
@@ -44,13 +61,4 @@ $ npm install react-resolve
 ## Ideas
 
 ```
-App = resolve({
-  users: (props) => Promise.resolve([
-    {id: 1, name: "user 1"}
-    {id: 2, name: "user 2"},
-  ])
-}, {
-  destroy: ["REMOVE", "users", (id) => Promise.resolve({id})]  // ADD REMOVE UPDATE
-})(App)
-
 ```

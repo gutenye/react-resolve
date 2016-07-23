@@ -93,8 +93,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -106,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  create: "add"
 	};
 
-	function resolve(key, promise, actions) {
+	function resolve(query, actions) {
 	  return function (WrappedComponent) {
 	    return function (_Component) {
 	      _inherits(_class2, _Component);
@@ -118,8 +116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this.state = {
 	          loaded: false,
-	          data: {} // {users: {id: 1}}
-	        };
+	          data: {} };
 
 	        _this.actions = _this.processActions(actions);
 	        _this.resolve = _this.resolve.bind(_this);
@@ -144,7 +141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, {
 	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(prev) {
-	          if (prev.params.id !== this.props.params.id) {
+	          if (prev.params && prev.params.id !== this.props.params.id) {
 	            this.resolve();
 	          }
 	        }
@@ -156,37 +153,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var props = this.props;
 
 	          arg = Object.assign({}, props, arg);
-	          promise(arg).then(function (result) {
-	            _this2.setState({ data: _defineProperty({}, key, result), loaded: true });
+	          var promises = Object.keys(query).map(function (field) {
+	            return query[field](arg);
+	          });
+	          var fields = Object.keys(query);
+	          Promise.all(promises).then(function (results) {
+	            var data = results.reduce(function (data, value, i) {
+	              data[fields[i]] = value;
+	              return data;
+	            }, {});
+	            _this2.setState({ data: data, loaded: true });
 	          });
 	        }
 	      }, {
 	        key: "remove",
-	        value: function remove(result) {
+	        value: function remove(field, result) {
 	          var data = this.state.data;
 
-	          (0, _lodash.remove)(data[key], function (v) {
+	          (0, _lodash.remove)(data[field], function (v) {
 	            return v.id === result.id;
 	          });
 	          this.setState({ data: data });
 	        }
 	      }, {
 	        key: "add",
-	        value: function add(result) {
+	        value: function add(field, result) {
 	          var data = this.state.data;
 
-	          data[key].push(result);
+	          data[field].push(result);
 	          this.setState({ data: data });
 	        }
 	      }, {
 	        key: "update",
-	        value: function update(result) {
+	        value: function update(field, result) {
 	          var data = this.state.data;
 
-	          var index = data[key].findIndex(function (v) {
+	          var index = data[field].findIndex(function (v) {
 	            return v.id === result.id;
 	          });
-	          if (index !== -1) data[key].splice(index, 1, result);
+	          if (index !== -1) data[field].splice(index, 1, result);
 	          this.setState({ data: data });
 	        }
 	      }, {
@@ -194,11 +199,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function processActions(actions) {
 	          var _this3 = this;
 
-	          (0, _lodash.forEach)(actions, function (action, name) {
-	            var type = ACTION_ALIAS[name] || name;
+	          (0, _lodash.forEach)(actions, function (args, name) {
+	            args = (0, _lodash.castArray)(args);
+	            var action = args[0],
+	                type = (args[1] || ACTION_ALIAS[name] || name).toLowerCase(),
+	                field = args[2] || Object.keys(query)[0];
 	            actions[name] = function () {
 	              action.apply(undefined, arguments).then(function (result) {
-	                _this3[type](result);
+	                _this3[type](field, result);
 	              });
 	            };
 	          });

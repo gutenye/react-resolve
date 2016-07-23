@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
+  build
+}
+
+test() {
   webpack-dev-server
   echo "Open localhost:3003/test"
 }
@@ -12,4 +16,5 @@ build() {
 case "$1" in
   "" ) main ;;
   b | build ) build ;;
+  t | test ) test ;;
 esac
