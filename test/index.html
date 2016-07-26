@@ -22,7 +22,7 @@ class App extends Component {
     var {props: {users, resolve, remove, myadd, update}} = this
     return (
       <div>
-        <button onClick={() => resolve({name: "resolve"})}>resolve</button>
+        <button onClick={() => resolve({name: "Tag"})}>resolve</button>
         <button onClick={() => remove(1)}>remove</button>
         <button onClick={() => myadd({id: 3, name: "3"})}>myadd</button>
         <button onClick={() => update({id: 1, name: "11"})}>update</button>
@@ -35,7 +35,9 @@ class App extends Component {
 }
 
 App = resolve({
-  users: (props) => Promise.resolve([{id: 1, name: props.name || "1"}, {id: 2, name: "2"}]),
+  users: ({name}) => Promise.resolve([{id: 1, name: name}, {id: 2, name: "2"}]),
+}, {
+  name: "Guten"
 }, {
   remove: (id) => Promise.resolve({id}),
   myadd:  [ (data) => Promise.resolve(data), "ADD" ],

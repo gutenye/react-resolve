@@ -6,7 +6,7 @@ const ACTION_ALIAS = {
   create: "add",
 }
 
-export default function resolve(query, actions) {
+export default function resolve(query, init, actions) {
   return function(WrappedComponent) {
     return class extends Component {
       state = {
@@ -24,7 +24,7 @@ export default function resolve(query, actions) {
         if (!this.state.loaded)
           return null
         var {state: {data}, resolve, actions} = this
-        return <WrappedComponent {...data} {...actions} {...{resolve}}  />
+        return <WrappedComponent {...data} {...actions} resolve={resolve}  />
       }
 
       componentDidMount() {
@@ -37,10 +37,10 @@ export default function resolve(query, actions) {
         }
       }
 
-      resolve(arg) {
+      resolve(options) {
         var {props} = this
-        arg = Object.assign({}, props, arg)
-        var promises = Object.keys(query).map(field => query[field](arg))
+        options = Object.assign({}, init, props, options)
+        var promises = Object.keys(query).map(field => query[field](options))
         var fields = Object.keys(query)
         Promise.all(promises).then(results => {
           var data = results.reduce((data, value, i) => {

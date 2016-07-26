@@ -13,7 +13,9 @@ Features
 import {resolve} from "react-resolve"
 
 @resolve({
-  users: props => Promise.resolve([{id: 1, name: "a"}]),
+  users: ({page}) => Promise.resolve([{id: 1, page}]),
+}, {
+  page: 0,
 }, {
   add: (data) => Promise.resolve(data),
   add: [ (data) => promise, "ADD" ],
