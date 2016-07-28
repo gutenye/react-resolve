@@ -127,11 +127,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "render",
 	        value: function render() {
 	          if (!this.state.loaded) return null;
+	          var props = this.props;
 	          var data = this.state.data;
 	          var resolve = this.resolve;
 	          var actions = this.actions;
 
-	          return _react2.default.createElement(WrappedComponent, _extends({}, data, actions, { resolve: resolve }));
+	          return _react2.default.createElement(WrappedComponent, _extends({}, props, data, actions, { resolve: resolve }));
 	        }
 	      }, {
 	        key: "componentDidMount",
@@ -17090,14 +17091,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ReactComponent = __webpack_require__(7);
 	var ReactElement = __webpack_require__(10);
-	var ReactPropTypeLocations = __webpack_require__(26);
-	var ReactPropTypeLocationNames = __webpack_require__(27);
+	var ReactPropTypeLocations = __webpack_require__(27);
+	var ReactPropTypeLocationNames = __webpack_require__(28);
 	var ReactNoopUpdateQueue = __webpack_require__(22);
 
 	var emptyObject = __webpack_require__(24);
 	var invariant = __webpack_require__(25);
-	var keyMirror = __webpack_require__(28);
-	var keyOf = __webpack_require__(29);
+	var keyMirror = __webpack_require__(29);
+	var keyOf = __webpack_require__(30);
 	var warning = __webpack_require__(17);
 
 	var MIXINS_KEY = keyOf({ mixins: null });
@@ -17818,7 +17819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ReactElement = __webpack_require__(10);
 
-	var mapObject = __webpack_require__(30);
+	var mapObject = __webpack_require__(26);
 
 	/**
 	 * Create a factory that creates HTML tag elements.
@@ -18357,7 +18358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	var ReactElement = __webpack_require__(10);
-	var ReactPropTypeLocationNames = __webpack_require__(27);
+	var ReactPropTypeLocationNames = __webpack_require__(28);
 
 	var emptyFunction = __webpack_require__(19);
 	var getIteratorFn = __webpack_require__(32);
@@ -18837,7 +18838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ReactCurrentOwner = __webpack_require__(31);
 	var ReactComponentTreeDevtool = __webpack_require__(33);
 	var ReactElement = __webpack_require__(10);
-	var ReactPropTypeLocations = __webpack_require__(26);
+	var ReactPropTypeLocations = __webpack_require__(27);
 
 	var checkReactTypeSpec = __webpack_require__(34);
 
@@ -19854,6 +19855,61 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+	/**
+	 * Executes the provided `callback` once for each enumerable own property in the
+	 * object and constructs a new object from the results. The `callback` is
+	 * invoked with three arguments:
+	 *
+	 *  - the property value
+	 *  - the property name
+	 *  - the object being traversed
+	 *
+	 * Properties that are added after the call to `mapObject` will not be visited
+	 * by `callback`. If the values of existing properties are changed, the value
+	 * passed to `callback` will be the value at the time `mapObject` visits them.
+	 * Properties that are deleted before being visited are not visited.
+	 *
+	 * @grep function objectMap()
+	 * @grep function objMap()
+	 *
+	 * @param {?object} object
+	 * @param {function} callback
+	 * @param {*} context
+	 * @return {?object}
+	 */
+	function mapObject(object, callback, context) {
+	  if (!object) {
+	    return null;
+	  }
+	  var result = {};
+	  for (var name in object) {
+	    if (hasOwnProperty.call(object, name)) {
+	      result[name] = callback.call(context, object[name], name, object);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = mapObject;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
 	 * Copyright 2013-present, Facebook, Inc.
 	 * All rights reserved.
 	 *
@@ -19866,7 +19922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var keyMirror = __webpack_require__(28);
+	var keyMirror = __webpack_require__(29);
 
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -19877,7 +19933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ReactPropTypeLocations;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -19907,7 +19963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -19960,7 +20016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -19997,61 +20053,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = keyOf;
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
-
-	'use strict';
-
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-	/**
-	 * Executes the provided `callback` once for each enumerable own property in the
-	 * object and constructs a new object from the results. The `callback` is
-	 * invoked with three arguments:
-	 *
-	 *  - the property value
-	 *  - the property name
-	 *  - the object being traversed
-	 *
-	 * Properties that are added after the call to `mapObject` will not be visited
-	 * by `callback`. If the values of existing properties are changed, the value
-	 * passed to `callback` will be the value at the time `mapObject` visits them.
-	 * Properties that are deleted before being visited are not visited.
-	 *
-	 * @grep function objectMap()
-	 * @grep function objMap()
-	 *
-	 * @param {?object} object
-	 * @param {function} callback
-	 * @param {*} context
-	 * @return {?object}
-	 */
-	function mapObject(object, callback, context) {
-	  if (!object) {
-	    return null;
-	  }
-	  var result = {};
-	  for (var name in object) {
-	    if (hasOwnProperty.call(object, name)) {
-	      result[name] = callback.call(context, object[name], name, object);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = mapObject;
 
 /***/ },
 /* 31 */
@@ -20378,7 +20379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _prodInvariant = __webpack_require__(21);
 
-	var ReactPropTypeLocationNames = __webpack_require__(27);
+	var ReactPropTypeLocationNames = __webpack_require__(28);
 
 	var invariant = __webpack_require__(25);
 	var warning = __webpack_require__(17);

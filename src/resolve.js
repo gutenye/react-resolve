@@ -23,8 +23,8 @@ export default function resolve(query, init, actions) {
       render() {
         if (!this.state.loaded)
           return null
-        var {state: {data}, resolve, actions} = this
-        return <WrappedComponent {...data} {...actions} resolve={resolve}  />
+        var {props, state: {data}, resolve, actions} = this
+        return <WrappedComponent {...props} {...data} {...actions} resolve={resolve}  />
       }
 
       componentDidMount() {
