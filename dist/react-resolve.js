@@ -142,7 +142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, {
 	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(prev) {
-	          if (prev.params && prev.params.id !== this.props.params.id) {
+	          if (prev.location && prev.location.pathname + prev.location.search !== this.props.location.pathname + this.props.location.search) {
 	            this.resolve();
 	          }
 	        }
@@ -151,9 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function resolve(options) {
 	          var _this2 = this;
 
-	          var props = this.props;
-
-	          options = Object.assign({}, init, props, options);
+	          options = Object.assign({}, init, this.props, options);
 	          var promises = Object.keys(query).map(function (field) {
 	            return query[field](options);
 	          });
@@ -17091,14 +17089,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ReactComponent = __webpack_require__(7);
 	var ReactElement = __webpack_require__(10);
-	var ReactPropTypeLocations = __webpack_require__(27);
+	var ReactPropTypeLocations = __webpack_require__(30);
 	var ReactPropTypeLocationNames = __webpack_require__(28);
 	var ReactNoopUpdateQueue = __webpack_require__(22);
 
 	var emptyObject = __webpack_require__(24);
 	var invariant = __webpack_require__(25);
-	var keyMirror = __webpack_require__(29);
-	var keyOf = __webpack_require__(30);
+	var keyMirror = __webpack_require__(31);
+	var keyOf = __webpack_require__(32);
 	var warning = __webpack_require__(17);
 
 	var MIXINS_KEY = keyOf({ mixins: null });
@@ -18001,7 +17999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assign = __webpack_require__(15);
 
-	var ReactCurrentOwner = __webpack_require__(31);
+	var ReactCurrentOwner = __webpack_require__(27);
 
 	var warning = __webpack_require__(17);
 	var canDefineProperty = __webpack_require__(23);
@@ -18361,7 +18359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ReactPropTypeLocationNames = __webpack_require__(28);
 
 	var emptyFunction = __webpack_require__(19);
-	var getIteratorFn = __webpack_require__(32);
+	var getIteratorFn = __webpack_require__(29);
 
 	/**
 	 * Collection of methods that allow declaration and validation of props that are
@@ -18835,15 +18833,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ReactCurrentOwner = __webpack_require__(31);
+	var ReactCurrentOwner = __webpack_require__(27);
 	var ReactComponentTreeDevtool = __webpack_require__(33);
 	var ReactElement = __webpack_require__(10);
-	var ReactPropTypeLocations = __webpack_require__(27);
+	var ReactPropTypeLocations = __webpack_require__(30);
 
 	var checkReactTypeSpec = __webpack_require__(34);
 
 	var canDefineProperty = __webpack_require__(23);
-	var getIteratorFn = __webpack_require__(32);
+	var getIteratorFn = __webpack_require__(29);
 	var warning = __webpack_require__(17);
 
 	function getDeclarationErrorAddendum() {
@@ -19447,10 +19445,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _prodInvariant = __webpack_require__(21);
 
-	var ReactCurrentOwner = __webpack_require__(31);
+	var ReactCurrentOwner = __webpack_require__(27);
 	var ReactElement = __webpack_require__(10);
 
-	var getIteratorFn = __webpack_require__(32);
+	var getIteratorFn = __webpack_require__(29);
 	var invariant = __webpack_require__(25);
 	var KeyEscapeUtils = __webpack_require__(35);
 	var warning = __webpack_require__(17);
@@ -19917,20 +19915,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule ReactPropTypeLocations
+	 * @providesModule ReactCurrentOwner
 	 */
 
 	'use strict';
 
-	var keyMirror = __webpack_require__(29);
+	/**
+	 * Keeps track of the current owner.
+	 *
+	 * The current owner is the component who should own any components that are
+	 * currently being constructed.
+	 */
 
-	var ReactPropTypeLocations = keyMirror({
-	  prop: null,
-	  context: null,
-	  childContext: null
-	});
+	var ReactCurrentOwner = {
 
-	module.exports = ReactPropTypeLocations;
+	  /**
+	   * @internal
+	   * @type {ReactComponent}
+	   */
+	  current: null
+
+	};
+
+	module.exports = ReactCurrentOwner;
 
 /***/ },
 /* 28 */
@@ -19964,6 +19971,79 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getIteratorFn
+	 * 
+	 */
+
+	'use strict';
+
+	/* global Symbol */
+
+	var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+	var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+	/**
+	 * Returns the iterator method function contained on the iterable object.
+	 *
+	 * Be sure to invoke the function with the iterable as context:
+	 *
+	 *     var iteratorFn = getIteratorFn(myIterable);
+	 *     if (iteratorFn) {
+	 *       var iterator = iteratorFn.call(myIterable);
+	 *       ...
+	 *     }
+	 *
+	 * @param {?object} maybeIterable
+	 * @return {?function}
+	 */
+	function getIteratorFn(maybeIterable) {
+	  var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+	  if (typeof iteratorFn === 'function') {
+	    return iteratorFn;
+	  }
+	}
+
+	module.exports = getIteratorFn;
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPropTypeLocations
+	 */
+
+	'use strict';
+
+	var keyMirror = __webpack_require__(31);
+
+	var ReactPropTypeLocations = keyMirror({
+	  prop: null,
+	  context: null,
+	  childContext: null
+	});
+
+	module.exports = ReactPropTypeLocations;
+
+/***/ },
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20016,7 +20096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -20055,88 +20135,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyOf;
 
 /***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactCurrentOwner
-	 */
-
-	'use strict';
-
-	/**
-	 * Keeps track of the current owner.
-	 *
-	 * The current owner is the component who should own any components that are
-	 * currently being constructed.
-	 */
-
-	var ReactCurrentOwner = {
-
-	  /**
-	   * @internal
-	   * @type {ReactComponent}
-	   */
-	  current: null
-
-	};
-
-	module.exports = ReactCurrentOwner;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getIteratorFn
-	 * 
-	 */
-
-	'use strict';
-
-	/* global Symbol */
-
-	var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
-	var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
-
-	/**
-	 * Returns the iterator method function contained on the iterable object.
-	 *
-	 * Be sure to invoke the function with the iterable as context:
-	 *
-	 *     var iteratorFn = getIteratorFn(myIterable);
-	 *     if (iteratorFn) {
-	 *       var iterator = iteratorFn.call(myIterable);
-	 *       ...
-	 *     }
-	 *
-	 * @param {?object} maybeIterable
-	 * @return {?function}
-	 */
-	function getIteratorFn(maybeIterable) {
-	  var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
-	  if (typeof iteratorFn === 'function') {
-	    return iteratorFn;
-	  }
-	}
-
-	module.exports = getIteratorFn;
-
-/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -20155,7 +20153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _prodInvariant = __webpack_require__(21);
 
-	var ReactCurrentOwner = __webpack_require__(31);
+	var ReactCurrentOwner = __webpack_require__(27);
 
 	var invariant = __webpack_require__(25);
 	var warning = __webpack_require__(17);

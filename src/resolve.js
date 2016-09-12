@@ -32,14 +32,13 @@ export default function resolve(query, init, actions) {
       }
 
       componentDidUpdate(prev) {
-        if (prev.params && prev.params.id !== this.props.params.id) {
+        if (prev.location && prev.location.pathname+prev.location.search !== this.props.location.pathname+this.props.location.search) {
           this.resolve()
         }
       }
 
       resolve(options) {
-        var {props} = this
-        options = Object.assign({}, init, props, options)
+        options = Object.assign({}, init, this.props, options)
         var promises = Object.keys(query).map(field => query[field](options))
         var fields = Object.keys(query)
         Promise.all(promises).then(results => {
