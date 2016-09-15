@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { forEach, remove, isArray, castArray } from "lodash"
 
 const ACTION_ALIAS = {
@@ -8,7 +8,7 @@ const ACTION_ALIAS = {
 
 export default function resolve(query, init, actions) {
   return function(WrappedComponent) {
-    return class extends Component {
+    return class extends React.Component {
       state = {
         loaded: false,
         data: {},  // {users: [...]}
